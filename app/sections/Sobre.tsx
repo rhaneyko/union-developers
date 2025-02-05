@@ -1,36 +1,46 @@
 export default function Sobre() {
   return (
-    <section className="py-12 px-6 flex flex-col justify-center items-center bg-[#1F1D2B]">
-      
-      {/* 🔥 Container externo que cria a borda gradiente */}
-      <div className="relative p-[2px] rounded-xl bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)]">
-        
-        {/* 🔥 Card interno com fundo sólido */}
-        <div className="relative max-w-3xl p-6 bg-[#1F1D2B] text-white rounded-xl">
-          
-          {/* Linha com gradiente no topo */}
-          <div className="flex items-center w-full mb-6 relative">
-            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)] mx-6 text-left">
+    <section className="py-10 px-4 flex flex-col justify-center items-center bg-[#1F1D2B]">
+
+      {/* Container externo com borda gradiente */}
+      <div className="flex flex-col justify-center items-center p-[2px] rounded-xl 
+                      bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)] 
+                      w-full max-w-full md:max-w-[1100px] h-full">
+
+        {/* Card interno */}
+        <div className="relative w-full h-auto p-4 md:p-6 bg-[#1F1D2B] text-white rounded-xl">
+
+          {/* Título responsivo */}
+          <div className="flex items-center w-full md:w-[340px] mb-4 mt-[-50px] mx-auto md:ml-[30px] px-4 md:px-6 relative bg-[#1F1D2B]">
+            <h2 className="text-[28px] md:text-[40px] font-bold text-transparent bg-clip-text 
+                           bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)] 
+                           text-center md:text-left">
               Quem somos?
             </h2>
           </div>
 
-          {/* Texto dentro do card */}
-          <p className="text-lg leading-relaxed">
-            O Union é uma oportunidade única para desenvolvedores juniores, nossa missão é proporcionar a
-            você um ambiente prático e imersivo, semelhante ao que você encontrará no mercado. Aqui,
-            você vai vivenciar como é o dia a dia de um desenvolvedor de software, trabalhando lado a lado
-            com líderes experientes e outros talentosos desenvolvedores que estão no mesmo caminho que você.
-          </p>
-          <br />
-          <p className="text-lg leading-relaxed">
-            No Union, você não apenas ganhará experiência, mas também estará pronto para enfrentar as
-            demandas do mercado de tecnologia. Nossa abordagem holística enfatiza não apenas o conhecimento
-            técnico, mas também habilidades interpessoais e práticas ágeis.
-          </p>
+          {/* Parágrafos responsivos */}
+          <div className="space-y-4 px-4 md:px-10 max-w-full md:max-w-[900px] text-[18px] md:text-[24px] leading-relaxed">
+            <p>
+              O Union é uma oportunidade única para desenvolvedores juniores, nossa missão é proporcionar a
+              você um ambiente prático e imersivo, semelhante ao que você encontrará no mercado. Aqui,
+              você vai vivenciar como é o dia a dia de um desenvolvedor de software, trabalhando lado a lado
+              com líderes experientes e outros talentosos desenvolvedores que estão no mesmo caminho que você.
+            </p>
+            <p>
+              No Union, você não apenas ganhará experiência, mas também estará pronto para enfrentar as
+              demandas do mercado de tecnologia. Nossa abordagem holística enfatiza não apenas o conhecimento
+              técnico, mas também habilidades interpessoais e práticas ágeis.
+            </p>
+          </div>
+
         </div>
       </div>
-      <span className="border-2 h-[50px]"></span>
+
+      {/* Barra gradiente abaixo */}
+      <div className="relative p-[2px] w-1 h-32 bg-gradient-to-b from-[rgb(67,44,160)] to-transparent 
+                after:content-[''] after:absolute after:w-full after:h-full after:rounded-inherit 
+                after:bg-gradient-to-tl after:from-[rgb(31,29,43)] after:to-transparent"></div>
 
     </section>
   );
