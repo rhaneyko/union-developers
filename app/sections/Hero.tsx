@@ -8,7 +8,7 @@ export default function Hero() {
             className="relative flex flex-col mt-[114px]  md:flex-row items-center justify-center 
                  min-h-screen w-full text-center md:text-left px-[244px] 
                  bg-[url('/images/hero-mobile.jpg')] bg-cover bg-center bg-no-repeat 
-                 md:bg-[url('/images/hero-desktop.jpg')]">
+                 md:bg-[url('/images/hero-desktop.jpg')]" id="hero">
 
 
             {/* Texto - Ajustado para ficar sobre a imagem corretamente */}
