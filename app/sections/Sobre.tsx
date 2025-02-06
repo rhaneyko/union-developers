@@ -1,6 +1,6 @@
 export default function Sobre() {
   return (
-    <section className="py-10 px-4 flex flex-col justify-center items-center bg-[#1F1D2B]">
+    <section className="py-10 px-4 flex flex-col justify-center items-center bg-[#1F1D2B]" id="sobre">
 
       {/* Container externo com borda gradiente */}
       <div className="flex flex-col justify-center items-center p-[2px] rounded-xl 
