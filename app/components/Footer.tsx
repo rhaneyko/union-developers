@@ -1,31 +1,30 @@
 export default function Footer() {
     return (
-      <footer className="bg-[#1F1D2B] text-white py-12 px-6">
+      <footer className="bg-[#121119] text-white py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
           
           {/* 🔹 Seção da Logo e Descrição */}
           <div className="max-w-sm">
             <div className="flex items-center space-x-2">
-              <img src="/images/logoUnionDeveloper.svg" alt="Union Developers" width={40} height={40} />
-              <h2 className="text-2xl font-bold">Union Developers</h2>
+              <img src="/images/logoUnionDeveloper.svg" alt="Union Developers" width={263} height={37} />
             </div>
-            <p className="text-gray-300 mt-4">
-              O Union proporciona experiência para desenvolvedores juniores, transformando-os em profissionais preparados para o mercado.
+            <p className="text-gray-300 mt-4 text-[20px]">
+            O Union proporciona experiência para desenvolvedores juniors, transformando-os em profissionais preparados para o mercado.
             </p>
           </div>
   
           {/* 🔹 Links de Navegação */}
           <div className="flex space-x-12 mt-8 md:mt-0">
             <div>
-              <h3 className="font-bold text-lg mb-2">Saiba mais</h3>
+              <h3 className="font-bold text-[24px] mb-2">Saiba mais</h3>
               <ul className="space-y-1">
-                <li><a href="#sobre" className="hover:text-gray-400 transition">Sobre</a></li>
-                <li><a href="#depoimentos" className="hover:text-gray-400 transition">Depoimentos</a></li>
+                <li><a href="#sobre" className="hover:text-gray-400 transition text-[18px]">Sobre</a></li>
+                <li><a href="#depoimentos" className="hover:text-gray-400 transition text-[18px]">Depoimentos</a></li>
               </ul>
             </div>
   
             <div>
-              <h3 className="font-bold text-lg mb-2">Dúvidas</h3>
+              <h3 className="font-bold text-[24px] mb-2">Dúvidas</h3>
               <ul className="space-y-1">
                 <li><a href="#faq" className="hover:text-gray-400 transition">FAQ</a></li>
                 <li><a href="#como-funciona" className="hover:text-gray-400 transition">Como funciona</a></li>
