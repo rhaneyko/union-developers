@@ -1,185 +1,271 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+// Esquemas de validação com Zod
+const personalDataSchema = z.object({
+  fullName: z.string().min(1, "Nome completo é obrigatório"),
+  age: z.number().min(18, "Você deve ter mais de 18 anos"),
+  email: z.string().email("Email inválido"),
+  github: z.string().url("Link do GitHub inválido"),
+  linkedin: z.string().url("Link do LinkedIn inválido"),
+  preferredArea: z.enum(["Frontend", "Backend"], {
+    required_error: "Selecione uma área de preferência",
+  }),
+});
+
+const technicalDataSchema = z.object({
+  studyTime: z.enum(["1 ano", "2 anos", "3 anos", "Mais de 3 anos"], {
+    required_error: "Selecione o tempo de estudo",
+  }),
+  projectRepo: z.string().url("Link do repositório inválido"),
+  projectDescription: z.string().min(10, "Descreva seu projeto com mais detalhes"),
+});
+
+const aboutYouSchema = z.object({
+  motivation: z.string().min(10, "Descreva sua motivação"),
+  responsibilities: z.string().min(10, "Descreva como lida com responsabilidades"),
+  feedback: z.string().min(10, "Descreva como lida com feedback"),
+  howDidYouHear: z.string().min(10, "Descreva como ficou sabendo do Union"),
+  whyJoin: z.string().min(10, "Descreva por que quer participar"),
+  whyShouldYouJoin: z.string().min(10, "Descreva por que deveria ser selecionado"),
+});
+
+const formSchema = z.object({
+  personalData: personalDataSchema,
+  technicalData: technicalDataSchema,
+  aboutYou: aboutYouSchema,
+  acceptedTerms: z.boolean().refine((val) => val === true, {
+    message: "Você deve aceitar os termos para continuar",
+  })
+});
 
 export default function Inscricao() {
-  const [showForm, setShowForm] = useState(false); // Controla a tela inicial
-  const [step, setStep] = useState(1); // Controla os passos do formulário
+  const [showForm, setShowForm] = useState(false);
+  const [step, setStep] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
-  const [status] = useState("error");
+  const [status, setStatus] = useState<"success" | "error" | null>(null);
 
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+    trigger,
+    setValue,
+    watch,
+  } = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: JSON.parse(localStorage.getItem("formData") || "{}"),
+    mode: "onChange",
+  });
 
-  const nextStep = () => {
-    if (step < 4) setStep(step + 1);
+  // Salvar dados no localStorage a cada mudança
+  useEffect(() => {
+    const subscription = watch((value) => {
+      localStorage.setItem("formData", JSON.stringify(value));
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const nextStep = async () => {
+    let isValid = false;
+
+    if (step === 1) {
+      isValid = await trigger("personalData");
+    } else if (step === 2) {
+      isValid = await trigger("technicalData");
+    } else if (step === 3) {
+      isValid = await trigger("aboutYou");
+    }
+
+    if (isValid && step < 4) {
+      setStep(step + 1);
+    }
   };
 
   const prevStep = () => {
     if (step === 1) {
-      setShowForm(false); // Retorna para a tela inicial
+      setShowForm(false);
     } else {
-      setStep(step - 1); // Volta um passo no formulário
+      setStep(step - 1);
+    }
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      // Simulação de envio para um backend
+      const response = await fetch("/api/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        localStorage.removeItem("formData"); // Limpa o localStorage após o envio
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      console.error("Erro ao enviar o formulário:", error);
+      setStatus("error");
     }
   };
 
   return (
-    <section className="py-12 px-6 flex flex-col items-center bg-[#1F1D2B]">
-      <div className="">
-
-        {/* 🔹 Se NÃO clicou no botão Inscrever-se, exibe a tela inicial */}
+    <section className="py-12 px-4 sm:px-6 flex flex-col items-center bg-[#1F1D2B]" id="inscricao">
+      <div className="w-full max-w-4xl">
         {!showForm ? (
-          <div className="w-[1042px] h-[697px] p-8 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
-
-            <h2 className="text-[40px] font-bold mb-4">Junte-se ao time!</h2>
-            <p className="text-white-400 mb-6 text-[20px]">
+          <div className="w-full p-6 sm:p-8 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
+            <h2 className="text-3xl sm:text-[40px] font-bold mb-4">Junte-se ao time!</h2>
+            <p className="text-white-400 mb-6 text-lg sm:text-[20px]">
               Tem interesse em participar do Union?
               <br />
               Confira abaixo os requisitos para participar:
             </p>
-            <ul className="text-left space-y-5 text-white-400 text-[20px]">
-              <li className="flex items-center space-x-3">
-                <Image src="images/checkIcon.svg" alt="" width={30} height={30} />
-                Ter mais que 18 anos
-              </li>
-
-              <li className="flex items-center space-x-3">
-                <Image src="images/checkIcon.svg" alt="" width={30} height={30} />
-                Ter 1 ano ou mais de estudo em programação
-              </li>
-
-              <li className="flex items-center space-x-3">
-                <Image src="images/checkIcon.svg" alt="" width={30} height={30} />
-                Ainda não trabalhar na área
-              </li>
-
-              <li className="flex items-center space-x-3">
-                <Image src="images/checkIcon.svg" alt="" width={30} height={30} />
-                Já ter criado projetos sozinho que não sejam de cursos ou eventos
-              </li>
-
-              <li className="flex items-center space-x-3">
-                <Image src="images/checkIcon.svg" alt="" width={30} height={30} />
-                Não participar de bootcamps ou programas de capacitação
-              </li>
-
-              <li className="flex items-center space-x-3">
-                <Image src="images/checkIcon.svg" alt="" width={30} height={30} />
-                Ter disponibilidade para trabalhar no mínimo 1 hora por dia no projeto
-              </li>
-
-              <li className="flex items-center space-x-3">
-                <Image src="images/checkIcon.svg" alt="" width={30} height={30} />
-                Ter disponibilidade para reuniões do time, incluindo finais de semana
-              </li>
+            <ul className="text-left space-y-5 text-white-400 text-lg sm:text-[20px]">
+              {[
+                "Ter mais que 18 anos",
+                "Ter 1 ano ou mais de estudo em programação",
+                "Ainda não trabalhar na área",
+                "Já ter criado projetos sozinho que não sejam de cursos ou eventos",
+                "Não participar de bootcamps ou programas de capacitação",
+                "Ter disponibilidade para trabalhar no mínimo 1 hora por dia no projeto",
+                "Ter disponibilidade para reuniões do time, incluindo finais de semana",
+              ].map((item, index) => (
+                <li key={index} className="flex items-center space-x-3">
+                  <Image src="images/icons/checkIcon.svg" alt="" width={30} height={30} />
+                  {item}
+                </li>
+              ))}
             </ul>
             <button
-              onClick={() => setShowForm(true)} // Ao clicar, exibe o formulário
-              className="mt-10 w-full h-[69px]  font-bold text-[22px] rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] 
-                     hover:from-[#6B1570] hover:to-[#003BBC] 
-                     transition-all">
+              onClick={() => setShowForm(true)}
+              className="mt-10 w-full h-14 sm:h-[69px] font-bold text-lg sm:text-[22px] rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] hover:from-[#6B1570] hover:to-[#003BBC] transition-all"
+            >
               Inscrever-se
             </button>
           </div>
         ) : (
           <>
-            {/* 🔹 Renderização dinâmica dos formulários */}
             <div className="mt-6">
               {step === 1 && (
-                <div className="w-[1042px] h-[1206px] p-14 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
-
+                <div className="w-full p-6 sm:p-14 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
                   <div className="flex flex-col justify-between items-center mt-3">
-                    <div className="flex flex-col items-center text-center w-[400px]">
-                      <h2 className="text-[40px] font-bold mb-4">Junte-se ao time!</h2>
-                      <p className="text-white-400 text-[20px]">
-                        Ficamos felizes em saber que você tem interesse em fazer parte do Union! Agora é só responder o nosso formulário
-                      </p>
-                    </div>
-
-                    {/* 🔹 Barra de Progresso */}
-                    <div className="flex justify-between items-center mt-6 w-full relative">
-  {["Dados pessoais", "Informações técnicas", "Sobre você", "Enviar"].map((title, index) => (
-    <div key={index} className="flex flex-col items-center w-[150px] relative">
-
-      {/* Nome da etapa */}
-      <span className={`text-[20px] font-bold ${step >= index + 1 ? "text-white" : "text-[#BDBDBD]"}`}>
-        {title}
-      </span>
-
-      {/* Linha de conexão ANTES do número */}
-      {index > 0 && (
-        <div className={`absolute top-[50%] right-[100%] w-[120px] h-[6px] rounded-lg 
-          ${step > index ? "bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)]" : "bg-[#BDBDBD]"}`} />
-      )}
-
-      {/* Número da etapa */}
-      <div
-        className={`w-[50px] h-[50px] flex items-center justify-center rounded-full font-bold text-[24px] mt-2
-        ${step >= index + 1 ? "bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)] text-white" : "bg-[#BDBDBD] text-gray-800"}`}
-      >
-        {index + 1}
-      </div>
-    </div>
-  ))}
-</div>
-
+                    <h2 className="text-3xl sm:text-[40px] font-bold mb-4">Junte-se ao time!</h2>
+                    <p className="text-white-400 text-lg sm:text-[20px]">
+                      Ficamos felizes em saber que você tem interesse em fazer parte do Union! Agora é só responder o nosso formulário
+                    </p>
                   </div>
-                  <label className="block text-[18px] font-300 mb-[8px]"><span className="text-[#EB5757]">*</span> Nome completo</label>
-                  <input type="text" placeholder="Digite seu nome" className="w-full p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500" />
 
-                  <label className="block text-[18px] font-300 mt-4 mb-[8px]"><span className="text-[#EB5757]">*</span> Idade</label>
-                  <input type="number" placeholder="Digite sua idade" className="w-full p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500" />
+                  {/* Campo Nome Completo */}
+                  <label className="block text-lg sm:text-[18px] font-300 mb-2">
+                    <span className="text-[#EB5757]">*</span> Nome completo
+                  </label>
+                  <input
+                    {...register("personalData.fullName")}
+                    placeholder="Digite seu nome"
+                    className="w-full p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.personalData?.fullName && (
+                    <p className="text-red-500 text-sm mt-1">{errors.personalData.fullName.message}</p>
+                  )}
 
-                  <label className="block text-[18px] font-300 mt-4 mb-[8px]"><span className="text-[#EB5757]">*</span> Email</label>
-                  <input type="email" placeholder="Digite seu email" className="w-full p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500" />
+                  {/* Campo Idade */}
+                  <label className="block text-lg sm:text-[18px] font-300 mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Idade
+                  </label>
+                  <input
+                    type="number"
+                    {...register("personalData.age", { valueAsNumber: true })}
+                    placeholder="Digite sua idade"
+                    className="w-full p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.personalData?.age && (
+                    <p className="text-red-500 text-sm mt-1">{errors.personalData.age.message}</p>
+                  )}
 
-                  <label className="block text-[18px] font-300 mt-4 mb-[8px]"><span className="text-[#EB5757]">*</span> Github</label>
-                  <input type="text" placeholder="Digite seu Github?" className="w-full p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500" />
+                  {/* Campo Email */}
+                  <label className="block text-lg sm:text-[18px] font-300 mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Email
+                  </label>
+                  <input
+                    {...register("personalData.email")}
+                    placeholder="Digite seu email"
+                    className="w-full p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.personalData?.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.personalData.email.message}</p>
+                  )}
 
-                  <label className="block text-[18px] font-300 mt-4 mb-[8px]"><span className="text-[#EB5757]">*</span> Linkedin</label>
-                  <input type="text" placeholder="Digite seu Linkedin?" className="w-full p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500" />
-                  <p className="mt-5 text-[#E2E2E2] text-[18px]" ><span className="text-[#EB5757]">*</span> Onde você mais gosta de trabalhar?</p>
+                  {/* Campo GitHub */}
+                  <label className="block text-lg sm:text-[18px] font-300 mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> GitHub
+                  </label>
+                  <input
+                    {...register("personalData.github")}
+                    placeholder="Digite seu GitHub"
+                    className="w-full p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.personalData?.github && (
+                    <p className="text-red-500 text-sm mt-1">{errors.personalData.github.message}</p>
+                  )}
 
+                  {/* Campo LinkedIn */}
+                  <label className="block text-lg sm:text-[18px] font-300 mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> LinkedIn
+                  </label>
+                  <input
+                    {...register("personalData.linkedin")}
+                    placeholder="Digite seu LinkedIn"
+                    className="w-full p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.personalData?.linkedin && (
+                    <p className="text-red-500 text-sm mt-1">{errors.personalData.linkedin.message}</p>
+                  )}
 
-
+                  {/* Campo Área de Preferência */}
+                  <p className="mt-5 text-[#E2E2E2] text-lg sm:text-[18px]">
+                    <span className="text-[#EB5757]">*</span> Onde você mais gosta de trabalhar?
+                  </p>
                   <div className="flex flex-col space-y-2 mt-2">
-                    <label className="relative flex items-center space-x-3 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="opcao"
-                        className="hidden peer"
-                      />
-                      <div className="w-[20px] h-[20px] border-2 border-gray-400 rounded-full flex items-center justify-center relative peer-checked:border-gray-400 peer-checked:bg-gradient-to-bl from-[#0048FE] to-[#851D86]"></div>
-                      <span className="text-white">Frontend</span>
-                    </label>
-
-                    <label className="relative flex items-center space-x-3 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="opcao"
-                        className="hidden peer"
-                      />
-                      <div className="w-[20px] h-[20px] border-2 border-gray-400 rounded-full flex items-center justify-center relative peer-checked:border-gray-400 peer-checked:bg-gradient-to-bl from-[#0048FE] to-[#851D86]"></div>
-                      <span className="text-white">Backend</span>
-                    </label>
+                    {["Frontend", "Backend"].map((option) => (
+                      <label key={option} className="relative flex items-center space-x-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          value={option}
+                          {...register("personalData.preferredArea")}
+                          className="hidden peer"
+                        />
+                        <div className="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center relative peer-checked:border-gray-400 peer-checked:bg-gradient-to-bl from-[#0048FE] to-[#851D86]"></div>
+                        <span className="text-white">{option}</span>
+                      </label>
+                    ))}
                   </div>
+                  {errors.personalData?.preferredArea && (
+                    <p className="text-red-500 text-sm mt-1">{errors.personalData.preferredArea.message}</p>
+                  )}
 
-
-                  {/* 🔹 Botões de Navegação */}
-                  <div className="flex justify-between mt-6">
+                  {/* Botões de Navegação */}
+                  <div className="flex flex-col sm:flex-row justify-between mt-6 space-y-4 sm:space-y-0">
                     <button
                       onClick={prevStep}
-                      className="w-[457px] h-[69px] text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] p-[2px]
-                                 hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white">
-                      <span className="bg-transparent w-full h-full flex items-center justify-center rounded-lg">
-                        Voltar
-                      </span>
+                      className="w-full sm:w-[48%] h-14 sm:h-[69px] text-lg sm:text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white"
+                    >
+                      Voltar
                     </button>
-
                     <button
                       onClick={nextStep}
-                      className="w-[457px] h-[69px] text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] 
-                                 hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white">
+                      className="w-full sm:w-[48%] h-14 sm:h-[69px] text-lg sm:text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white"
+                    >
                       Próximo
                     </button>
                   </div>
@@ -187,81 +273,76 @@ export default function Inscricao() {
               )}
 
               {step === 2 && (
-                <div className="w-[1042px] h-[1092px] p-8 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
+                <div className="w-full p-6 sm:p-8 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
                   <div className="w-full flex justify-center">
-                    <div className="flex flex-col items-center text-center w-[400px]">
-                      <h2 className="text-[40px] font-bold mb-4">Junte-se ao time!</h2>
-                      <p className="text-white-400 text-[20px]">
+                    <div className="flex flex-col items-center text-center w-full sm:w-[400px]">
+                      <h2 className="text-3xl sm:text-[40px] font-bold mb-4">Junte-se ao time!</h2>
+                      <p className="text-white-400 text-lg sm:text-[20px]">
                         Ficamos felizes em saber que você tem interesse em fazer parte do Union! Agora é só responder o nosso formulário
                       </p>
                     </div>
                   </div>
 
-                  {/* 🔹 Barra de Progresso */}
-                  <div className="flex justify-between items-center mt-6 w-full relative">
-  {["Dados pessoais", "Informações técnicas", "Sobre você", "Enviar"].map((title, index) => (
-    <div key={index} className="flex flex-col items-center w-[150px] relative">
-
-      {/* Nome da etapa */}
-      <span className={`text-[20px] font-bold ${step >= index + 1 ? "text-white" : "text-[#BDBDBD]"}`}>
-        {title}
-      </span>
-
-      {/* Linha de conexão ANTES do número */}
-      {index > 0 && (
-        <div className={`absolute top-[50%] right-[100%] w-[120px] h-[6px] rounded-lg 
-          ${step > index ? "bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)]" : "bg-[#BDBDBD]"}`} />
-      )}
-
-      {/* Número da etapa */}
-      <div
-        className={`w-[50px] h-[50px] flex items-center justify-center rounded-full font-bold text-[24px] mt-2
-        ${step >= index + 1 ? "bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)] text-white" : "bg-[#BDBDBD] text-gray-800"}`}
-      >
-        {index + 1}
-      </div>
-    </div>
-  ))}
-</div>
-
-
-
-                  <label className="block text-[18px] text-[#E2E2E2] mb-2 mt-3">Quanto tempo você estuda programação?</label>
+                  {/* Campo Tempo de Estudo */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mb-2 mt-3">
+                    <span className="text-[#EB5757]">*</span> Quanto tempo você estuda programação?
+                  </label>
                   <div className="flex flex-col space-y-2 mt-2">
                     {["1 ano", "2 anos", "3 anos", "Mais de 3 anos"].map((option) => (
-
                       <label key={option} className="relative flex items-center space-x-3 cursor-pointer">
                         <input
                           type="radio"
-                          name="opcao"
+                          value={option}
+                          {...register("technicalData.studyTime")}
                           className="hidden peer"
                         />
-                        <div className="w-[20px] h-[20px] border-2 border-gray-400 rounded-full flex items-center justify-center relative peer-checked:border-gray-400 peer-checked:bg-gradient-to-bl from-[#0048FE] to-[#851D86]"></div>
+                        <div className="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center relative peer-checked:border-gray-400 peer-checked:bg-gradient-to-bl from-[#0048FE] to-[#851D86]"></div>
                         <span className="text-white">{option}</span>
                       </label>
                     ))}
                   </div>
+                  {errors.technicalData?.studyTime && (
+                    <p className="text-red-500 text-sm mt-1">{errors.technicalData.studyTime.message}</p>
+                  )}
 
-                  <label className="block text-[18px] text-[#E2E2E2] mt-4 mb-2"><span className="text-[#EB5757]">* </span>Link do respositório do seu melhor projeto</label>
-                  <input type="url" placeholder="Digite o link do repositório" className="w-full p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500" />
+                  {/* Campo Link do Repositório */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Link do repositório do seu melhor projeto
+                  </label>
+                  <input
+                    {...register("technicalData.projectRepo")}
+                    placeholder="Digite o link do repositório"
+                    className="w-full p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.technicalData?.projectRepo && (
+                    <p className="text-red-500 text-sm mt-1">{errors.technicalData.projectRepo.message}</p>
+                  )}
 
-                  <label className="block text-[18px] text-[#E2E2E2] mt-4 mb-2"><span className="text-[#EB5757]">* </span>Fale sobre como foi construir esse projeto? Quais foram os aprendizados e dificuldades que teve durante o desenvolvimento?</label>
-                  <textarea placeholder="Fale sobre o seu melhor projeto, nos conte como foi trabalhar nesse projeto?" className="resize-none w-full min-h-[150px] p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD]  focus:outline-none focus:border-purple-500" />
-                  {/* 🔹 Botões de Navegação */}
-                  <div className="flex justify-between mt-6">
+                  {/* Campo Descrição do Projeto */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Fale sobre como foi construir esse projeto
+                  </label>
+                  <textarea
+                    {...register("technicalData.projectDescription")}
+                    placeholder="Fale sobre o seu melhor projeto, nos conte como foi trabalhar nesse projeto?"
+                    className="resize-none w-full min-h-[150px] p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.technicalData?.projectDescription && (
+                    <p className="text-red-500 text-sm mt-1">{errors.technicalData.projectDescription.message}</p>
+                  )}
+
+                  {/* Botões de Navegação */}
+                  <div className="flex flex-col sm:flex-row justify-between mt-6 space-y-4 sm:space-y-0">
                     <button
                       onClick={prevStep}
-                      className="w-[457px] h-[69px] text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] p-[2px]
-                                 hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white">
-                      <span className="bg-none w-full h-full flex items-center justify-center rounded-lg">
-                        Voltar
-                      </span>
+                      className="w-full sm:w-[48%] h-14 sm:h-[69px] text-lg sm:text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white"
+                    >
+                      Voltar
                     </button>
-
                     <button
                       onClick={nextStep}
-                      className="w-[457px] h-[69px] text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] 
-                                 hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white">
+                      className="w-full sm:w-[48%] h-14 sm:h-[69px] text-lg sm:text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white"
+                    >
                       Próximo
                     </button>
                   </div>
@@ -269,79 +350,103 @@ export default function Inscricao() {
               )}
 
               {step === 3 && (
-                <div className="w-[1042px] h-auto p-8 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
+                <div className="w-full p-6 sm:p-8 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
                   <div className="w-full flex justify-center">
-                    <div className="flex flex-col items-center text-center w-[400px]">
-                      <h2 className="text-[40px] font-bold mb-4">Junte-se ao time!</h2>
-                      <p className="text-white-400 text-[20px]">
+                    <div className="flex flex-col items-center text-center w-full sm:w-[400px]">
+                      <h2 className="text-3xl sm:text-[40px] font-bold mb-4">Junte-se ao time!</h2>
+                      <p className="text-white-400 text-lg sm:text-[20px]">
                         Ficamos felizes em saber que você tem interesse em fazer parte do Union! Agora é só responder o nosso formulário
                       </p>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center mt-6 w-full relative">
-  {["Dados pessoais", "Informações técnicas", "Sobre você", "Enviar"].map((title, index) => (
-    <div key={index} className="flex flex-col items-center w-[150px] relative">
 
-      {/* Nome da etapa */}
-      <span className={`text-[20px] font-bold ${step >= index + 1 ? "text-white" : "text-[#BDBDBD]"}`}>
-        {title}
-      </span>
+                  {/* Campo Motivação */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Por que você gosta de programar? Qual sua maior motivação?
+                  </label>
+                  <textarea
+                    {...register("aboutYou.motivation")}
+                    placeholder="Qual é a sua maior motivação para fazer o que faz?"
+                    className="resize-none w-full min-h-[150px] p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.aboutYou?.motivation && (
+                    <p className="text-red-500 text-sm mt-1">{errors.aboutYou.motivation.message}</p>
+                  )}
 
-      {/* Linha de conexão ANTES do número */}
-      {index > 0 && (
-        <div className={`absolute top-[50%] right-[100%] w-[120px] h-[6px] rounded-lg 
-          ${step > index ? "bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)]" : "bg-[#BDBDBD]"}`} />
-      )}
+                  {/* Campo Responsabilidades */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Como você faz para conseguir cumprir todas as suas responsabilidades do dia a dia?
+                  </label>
+                  <textarea
+                    {...register("aboutYou.responsibilities")}
+                    placeholder="Como você faz para conseguir cumprir todas as suas responsabilidades do dia a dia?"
+                    className="resize-none w-full min-h-[150px] p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.aboutYou?.responsibilities && (
+                    <p className="text-red-500 text-sm mt-1">{errors.aboutYou.responsibilities.message}</p>
+                  )}
 
-      {/* Número da etapa */}
-      <div
-        className={`w-[50px] h-[50px] flex items-center justify-center rounded-full font-bold text-[24px] mt-2
-        ${step >= index + 1 ? "bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)] text-white" : "bg-[#BDBDBD] text-gray-800"}`}
-      >
-        {index + 1}
-      </div>
-    </div>
-  ))}
-</div>
+                  {/* Campo Feedback */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Quando você recebe um feedback, como é para você?
+                  </label>
+                  <textarea
+                    {...register("aboutYou.feedback")}
+                    placeholder="Nos conte como é para você receber feedback?"
+                    className="resize-none w-full min-h-[150px] p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.aboutYou?.feedback && (
+                    <p className="text-red-500 text-sm mt-1">{errors.aboutYou.feedback.message}</p>
+                  )}
 
+                  {/* Campo Como Ficou Sabendo do Union */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Como você ficou sabendo sobre o Union?
+                  </label>
+                  <textarea
+                    {...register("aboutYou.howDidYouHear")}
+                    placeholder="Como você ficou sabendo sobre o Union?"
+                    className="resize-none w-full min-h-[150px] p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.aboutYou?.howDidYouHear && (
+                    <p className="text-red-500 text-sm mt-1">{errors.aboutYou.howDidYouHear.message}</p>
+                  )}
 
+                  {/* Campo Por Que Quer Participar */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Por que você quer fazer parte do Union?
+                  </label>
+                  <textarea
+                    {...register("aboutYou.whyJoin")}
+                    placeholder="Por que você quer fazer parte do Union?"
+                    className="resize-none w-full min-h-[150px] p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.aboutYou?.whyJoin && (
+                    <p className="text-red-500 text-sm mt-1">{errors.aboutYou.whyJoin.message}</p>
+                  )}
 
-                  <label className="block text-[18px] text-[#E2E2E2] mt-4 mb-2"><span className="text-[#EB5757]">* </span>Por que você gosta de programar? Qual sua maior motivação?</label>
-                  <textarea placeholder="Qual é a sua maior motivação para fazer o que faz?" className="resize-none w-full min-h-[150px] p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD]  focus:outline-none focus:border-purple-500" />
+                  {/* Campo Por Que Deveria Ser Selecionado */}
+                  <label className="block text-lg sm:text-[18px] text-[#E2E2E2] mt-4 mb-2">
+                    <span className="text-[#EB5757]">*</span> Por que você deveria fazer parte do pequeno grupo que vai ter a oportunidade de participar do Union?
+                  </label>
+                  <textarea
+                    {...register("aboutYou.whyShouldYouJoin")}
+                    placeholder="Por que você deveria fazer parte do pequeno grupo que vai ter a oportunidade de participar do Union?"
+                    className="resize-none w-full min-h-[150px] p-3 rounded-lg bg-transparent border border-[#BDBDBD] focus:outline-none focus:border-purple-500"
+                  />
+                  {errors.aboutYou?.whyShouldYouJoin && (
+                    <p className="text-red-500 text-sm mt-1">{errors.aboutYou.whyShouldYouJoin.message}</p>
+                  )}
 
-                  <label className="block text-[18px] text-[#E2E2E2] mt-4 mb-2"><span className="text-[#EB5757]">* </span>Como você faz para conseguir cumprir todos as suas responsabilidades do dia a dia?</label>
-                  <textarea placeholder="Como você faz para conseguir cumprir todas as suas responsabilidades do dia a dia?" className="resize-none w-full min-h-[150px] p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD]  focus:outline-none focus:border-purple-500" />
-
-                  <label className="block text-[18px] text-[#E2E2E2] mt-4 mb-2"><span className="text-[#EB5757]">* </span>Quando você recebe um feedback, como é para você?</label>
-                  <textarea placeholder="Nos conte como é para você receber feedback?" className="resize-none w-full min-h-[150px] p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD]  focus:outline-none focus:border-purple-500" />
-
-                  <label className="block text-[18px] text-[#E2E2E2] mt-4 mb-2"><span className="text-[#EB5757]">* </span>Como você ficou sabendo sobre o Union?</label>
-                  <textarea placeholder="Como você ficou sabendo sobre o Union?" className="resize-none w-full min-h-[150px] p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD]  focus:outline-none focus:border-purple-500" />
-
-                  <label className="block text-[18px] text-[#E2E2E2] mt-4 mb-2"><span className="text-[#EB5757]">* </span>Por que você quer fazer parte do Union?</label>
-                  <textarea placeholder="Por que você quer fazer parte do Union?" className="resize-none w-full min-h-[150px] p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD]  focus:outline-none focus:border-purple-500" />
-
-                  <label className="block text-[18px] text-[#E2E2E2] mt-4 mb-2"><span className="text-[#EB5757]">* </span>Por que você deveria fazer parte do pequeno grupo que vai ter a oportunidade de participar do Union?</label>
-                  <textarea placeholder="Por que você deveria fazer parte do pequeno grupo que vai ter a oportunidade de participar do Union?" className="resize-none w-full min-h-[150px] p-[.75rem] pl-[1rem] rounded-lg bg-transparent border border-[#BDBDBD]  focus:outline-none focus:border-purple-500" />
-
-                  <p className="text-lg text-gray-300 text-center mb-4">
-                    Revise todas as informações antes de enviar sua inscrição.
-                  </p>
-
-                  <label className="flex items-center space-x-2 cursor-pointer">
+                  {/* Campo Aceitar Termos */}
+                  <label className="flex items-center space-x-2 cursor-pointer mt-6">
                     <input
                       type="checkbox"
+                      {...register("acceptedTerms")}
                       className="hidden peer"
                     />
-                    <div className="relative w-[40px] h-[40px] rounded-md p-[2px] border-2 border-gray-400
-                                    bg-transparent appearance-none flex items-center justify-center 
-                                    cursor-pointer peer-checked:bg-gradient-to-bl peer-checked:from-[#0048FE] peer-checked:to-[#851D86] 
-                                    peer-checked:border-transparent transition-all duration-200 ease-in-out 
-                                    peer-checked:before:content-[''] peer-checked:before:w-[1rem] peer-checked:before:h-[1.5rem]
-                                    peer-checked:before:border-r-[4px] peer-checked:before:border-b-[4px] 
-                                    peer-checked:before:border-white peer-checked:before:rotate-45 peer-checked:before:absolute peer-checked:before:top-[2px] 
-                                    peer-checked:before:opacity-100"></div>
-                    <span className="text-white text-[20px] font-bold">
+                    <div className="relative w-10 h-10 rounded-md p-[2px] border-2 border-gray-400 bg-transparent appearance-none flex items-center justify-center cursor-pointer peer-checked:bg-gradient-to-bl peer-checked:from-[#0048FE] peer-checked:to-[#851D86] peer-checked:border-transparent transition-all duration-200 ease-in-out peer-checked:before:content-[''] peer-checked:before:w-[1rem] peer-checked:before:h-[1.5rem] peer-checked:before:border-r-[4px] peer-checked:before:border-b-[4px] peer-checked:before:border-white peer-checked:before:rotate-45 peer-checked:before:absolute peer-checked:before:top-[2px] peer-checked:before:opacity-100"></div>
+                    <span className="text-white text-lg sm:text-[20px] font-bold">
                       Li e concordo com os{" "}
                       <button
                         onClick={() => setIsOpen(true)}
@@ -351,10 +456,14 @@ export default function Inscricao() {
                       </button>.
                     </span>
                   </label>
+                  {errors.acceptedTerms && (
+                    <p className="text-red-500 text-sm mt-1">{errors.acceptedTerms.message}</p>
+                  )}
+
+                  {/* Modal dos Termos */}
                   {isOpen && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                      <div className="bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)] p-6 w-[600px] rounded-xl shadow-lg text-white relative">
-                        {/* Título e Botão de Fechar */}
+                      <div className="bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)] p-6 w-full sm:w-[600px] rounded-xl shadow-lg text-white relative">
                         <div className="flex justify-between items-center border-b border-gray-500 pb-2">
                           <h2 className="text-2xl font-bold text-center flex-1">Termos e Condições</h2>
                           <button
@@ -370,7 +479,7 @@ export default function Inscricao() {
 
                           {/* Conteúdo dos Termos */}
                           <p>
-                            <strong>1. Autorização para coleta de informações:</strong>  Ao fornecer suas informações pessoais no formulário de inscrição, você autoriza o Union a coletar, armazenar e utilizar os dados fornecidos para fins de avaliação de inscrição e para a organização das atividades no âmbito do programa. Comprometemo-nos a proteger a privacidade e confidencialidade dos seus dados, em conformidade com as leis aplicáveis de proteção de dados.
+                            <strong>1. Autorização para coleta de informações:</strong> Ao fornecer suas informações pessoais no formulário de inscrição, você autoriza o Union a coletar, armazenar e utilizar os dados fornecidos para fins de avaliação de inscrição e para a organização das atividades no âmbito do programa. Comprometemo-nos a proteger a privacidade e confidencialidade dos seus dados, em conformidade com as leis aplicáveis de proteção de dados.
                           </p>
                           <p>
                             <strong>2. Idade mínima:</strong> Todos os membros do Union devem ter 18 anos de idade ou mais para participar do programa.
@@ -395,23 +504,18 @@ export default function Inscricao() {
                     </div>
                   )}
 
-
-
-                  {/* 🔹 Botões de Navegação */}
-                  <div className="flex justify-between mt-6">
+                  {/* Botões de Navegação */}
+                  <div className="flex flex-col sm:flex-row justify-between mt-6 space-y-4 sm:space-y-0">
                     <button
                       onClick={prevStep}
-                      className="w-[457px] h-[69px] text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] p-[2px]
-                                 hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white">
-                      <span className="bg-none w-full h-full flex items-center justify-center rounded-lg">
-                        Voltar
-                      </span>
+                      className="w-full sm:w-[48%] h-14 sm:h-[69px] text-lg sm:text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white"
+                    >
+                      Voltar
                     </button>
-
                     <button
                       onClick={nextStep}
-                      className="w-[457px] h-[69px] text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] 
-                                 hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white">
+                      className="w-full sm:w-[48%] h-14 sm:h-[69px] text-lg sm:text-[22px] font-bold rounded-lg bg-gradient-to-r from-[#851D86] to-[#0048FE] hover:from-[#6B1570] hover:to-[#003BBC] transition-all text-white"
+                    >
                       Próximo
                     </button>
                   </div>
@@ -419,76 +523,19 @@ export default function Inscricao() {
               )}
 
               {step === 4 && (
-                <div className="w-[1042px] p-8 flex flex-col items-center justify-center bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
-
-                  <div className="w-full flex justify-center">
-                    <div className="flex flex-col items-center text-center w-[400px]">
-                      <h2 className="text-[40px] font-bold mb-4">Junte-se ao time!</h2>
-                      <p className="text-white-400 text-[20px]">
-                        Ficamos felizes em saber que você tem interesse em fazer parte do Union! Agora é só responder o nosso formulário
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center mt-6 w-full relative">
-  {["Dados pessoais", "Informações técnicas", "Sobre você", "Enviar"].map((title, index) => (
-    <div key={index} className="flex flex-col items-center w-[150px] relative">
-
-      {/* Nome da etapa */}
-      <span className={`text-[20px] font-bold ${step >= index + 1 ? "text-white" : "text-[#BDBDBD]"}`}>
-        {title}
-      </span>
-
-      {/* Linha de conexão ANTES do número */}
-      {index > 4 && (
-        <div className={`absolute top-[50%] right-[100%] w-[120px] h-[6px] rounded-lg 
-          ${step > index ? "bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)]" : "bg-[#BDBDBD]"}`} />
-      )}
-
-      {/* Número da etapa */}
-      <div
-        className={`w-[50px] h-[50px] flex items-center justify-center rounded-full font-bold text-[24px] mt-2
-        ${step >= index + 1 ? "bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)] text-white" : "bg-[#BDBDBD] text-gray-800"}`}
-      >
-        {index + 1}
-      </div>
-    </div>
-  ))}
-</div>
-
-
-                  {/* Ícone de sucesso ou erro */}
-                  {status === "success" ? (
-                    <Image
-                      src="/images/successSubscriptionIcon.svg"
-                      alt="Sucesso"
-                      width={80}
-                      height={80}
-                    />
-                  ) : (
-                    <Image
-                      src="/images/errorSubscriptionIcon.svg"
-                      alt="Erro"
-                      width={80}
-                      height={80}
-                    />
-                  )}
-
-                  {/* Mensagem de feedback */}
+                <div className="w-full p-6 sm:p-8 flex flex-col items-center justify-center bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">
                   <h2 className="text-3xl font-bold mt-4">
                     {status === "success" ? "Inscrição realizada com sucesso!" : "Ocorreu um erro na inscrição"}
                   </h2>
-
-                  <div className="w-[580px] mt-10 mb-10">
+                  <div className="w-full sm:w-[580px] mt-10 mb-10">
                     <p className="text-lg text-white-300 text-center mt-2">
                       {status === "success"
-                        ? "Obrigado NOME USUARIO por querer fazer parte da Union, em breve nossa equipe vai entrar em contato pelo seu email EMAIL@EMAIL.COM, fique atento."
+                        ? "Obrigado por querer fazer parte da Union, em breve nossa equipe vai entrar em contato."
                         : "Infelizmente ocorreu um erro ao processar sua inscrição. Tente novamente mais tarde ou entre em contato com o suporte."}
                     </p>
                   </div>
                 </div>
               )}
-
-
             </div>
           </>
         )}
