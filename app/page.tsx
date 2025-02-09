@@ -15,13 +15,13 @@ export default function Home() {
       <Header />
       <Hero />
       <Sobre />
-      <Pilares/>
-      <Beneficios/>
-      <Etapas/>
-      <Depoimentos/>
-      <Inscricao/>
-      <Duvidas/>
-      <Footer/>
+      <Pilares />
+      <Beneficios />
+      <Etapas />
+      <Depoimentos />
+      <Inscricao />
+      <Duvidas />
+      <Footer />
     </>
   );
 }
