@@ -1,6 +1,11 @@
-export default function Sobre() {
+interface HeroProps {
+  id: string; // Adicione a prop id
+}
+
+
+export default function Sobre({ id }: HeroProps) {
   return (
-    <section className="py-10 px-4 flex flex-col justify-center items-center bg-[#1F1D2B]" id="sobre">
+    <section className="py-10 px-4 flex flex-col justify-center items-center bg-[#1F1D2B]" id={id}>
 
       {/* Container externo com borda gradiente */}
       <div className="flex flex-col justify-center items-center p-[2px] rounded-xl 

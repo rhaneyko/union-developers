@@ -7,6 +7,10 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+interface HeroProps {
+  id: string; // Adicione a prop id
+}
+
 // Esquemas de validação com Zod
 const personalDataSchema = z.object({
   fullName: z.string().min(1, "Nome completo é obrigatório"),
@@ -45,7 +49,7 @@ const formSchema = z.object({
   })
 });
 
-export default function Inscricao() {
+export default function Inscricao({ id }: HeroProps) {
   const [showForm, setShowForm] = useState(false);
   const [step, setStep] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -121,7 +125,7 @@ export default function Inscricao() {
   };
 
   return (
-    <section className="py-12 px-4 sm:px-6 flex flex-col items-center bg-[#1F1D2B]" id="inscricao">
+    <section className="py-12 px-4 sm:px-6 flex flex-col items-center bg-[#1F1D2B]" id={id}>
       <div className="w-full max-w-4xl">
         {!showForm ? (
           <div className="w-full p-6 sm:p-8 bg-gradient-to-bl from-[rgb(0,72,254,0.2)] to-[rgb(133,29,134,0.2)] rounded-xl shadow-lg text-white">

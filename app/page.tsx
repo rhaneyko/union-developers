@@ -13,14 +13,14 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Hero />
-      <Sobre />
-      <Pilares />
-      <Beneficios />
-      <Etapas />
-      <Depoimentos />
-      <Inscricao />
-      <Duvidas />
+      <Hero id="hero" />
+      <Sobre id="sobre" />
+      <Pilares id="pilares" />
+      <Beneficios id="beneficios" />
+      <Etapas id="etapas" />
+      <Depoimentos id="depoimentos" />
+      <Inscricao id="inscricao" />
+      <Duvidas id="duvidas" />
       <Footer />
     </>
   );

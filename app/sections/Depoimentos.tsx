@@ -8,7 +8,11 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-export default function Depoimentos() {
+interface HeroProps {
+  id: string; // Adicione a prop id
+}
+
+export default function Depoimentos({ id }: HeroProps) {
   const testimonials = [
     { name: "Matheus Oliveira", image: "/images/pessoas/matheusOliveiraImage.png", feedback: "Antes de participar do Union, eu não tinha a mínima ideia de como era trabalhar em equipe e foi muito importante ter essa experiência.", linkedin: "/images/icons/linkedinIcon.svg", github: "/images/icons/githubIcon.svg" },
     { name: "Luiz Meraki", image: "/images/pessoas/luizMerakiImage.png", feedback: "No Union você consegue ter muita evolução em pouco tempo, desenvolvendo tanto sua parte técnica como as habilidades interpessoais.", linkedin: "/images/icons/inkedinIcon.svg", github: "/images/icons/githubIcon.svg" },
@@ -21,7 +25,7 @@ export default function Depoimentos() {
   const [activeIndex, setActiveIndex] = useState(Math.floor(totalSlides / 2));
 
   return (
-    <section className="py-16 px-6 flex flex-col items-center" id="depoimentos">
+    <section className="py-16 px-6 flex flex-col items-center" id={id}>
       {/* Título */}
       <div className="flex items-center justify-center w-full mb-6">
         <span className="hidden md:block absolute left-0 w-[32%] h-[3px] rounded-[20px] bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)]"></span>

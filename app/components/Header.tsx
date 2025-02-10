@@ -1,24 +1,46 @@
-"use client";
+"use client"; // Certifique-se de que este componente é renderizado no lado do cliente
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import { useInView } from "react-intersection-observer";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState("");
+
+  // Configuração do Intersection Observer para cada seção
+  const [heroRef, heroInView] = useInView({ threshold: 0.5 });
+  const [sobreRef, sobreInView] = useInView({ threshold: 0.5 });
+  const [pilaresRef, pilaresInView] = useInView({ threshold: 0.5 });
+  const [beneficiosRef, beneficiosInView] = useInView({ threshold: 0.5 });
+  const [etapasRef, etapasInView] = useInView({ threshold: 0.5 });
+  const [depoimentosRef, depoimentosInView] = useInView({ threshold: 0.5 });
+  const [duvidasRef, duvidasInView] = useInView({ threshold: 0.5 });
+
+  // Atualiza o link ativo com base na seção visível
+  useEffect(() => {
+    if (heroInView) setActiveLink("");
+    if (sobreInView) setActiveLink("sobre");
+    if (pilaresInView) setActiveLink("pilares");
+    if (beneficiosInView) setActiveLink("beneficios");
+    if (etapasInView) setActiveLink("etapas");
+    if (depoimentosInView) setActiveLink("depoimentos");
+    if (duvidasInView) setActiveLink("duvidas");
+  }, [heroInView, sobreInView, pilaresInView, beneficiosInView, etapasInView, depoimentosInView, duvidasInView]);
 
   const menuItems = [
-    { name: "Sobre", href: "#sobre" },
-    { name: "Pilares", href: "#pilares" },
-    { name: "Benefícios", href: "#beneficios" },
-    { name: "Etapas", href: "#etapas" },
-    { name: "Depoimentos", href: "#depoimentos" },
-    { name: "Dúvidas", href: "#duvidas" },
+    { name: "Sobre", href: "#sobre", ref: sobreRef },
+    { name: "Pilares", href: "#pilares", ref: pilaresRef },
+    { name: "Benefícios", href: "#beneficios", ref: beneficiosRef },
+    { name: "Etapas", href: "#etapas", ref: etapasRef },
+    { name: "Depoimentos", href: "#depoimentos", ref: depoimentosRef },
+    { name: "Dúvidas", href: "#duvidas", ref: duvidasRef },
   ];
 
   return (
-    <header className="fixed mb-[50px] top-0 left-0 w-full z-50 h-[114px] bg-[rgb(18,17,25)] shadow-lg flex items-center">
+    <header className="fixed top-0 left-0 w-full z-50 h-[114px] bg-[rgb(18,17,25)] shadow-lg flex items-center">
       <div className="container mx-auto flex items-center px-32 w-full">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -31,7 +53,11 @@ export default function Header() {
             <Link
               key={item.name}
               href={item.href}
-              className="relative text-white text-xl font-bold font-poppins transition-all hover:text-blue-400"
+              className={`relative text-xl font-bold font-poppins transition-all ${
+                activeLink === item.href.slice(1) // Remove o '#' do href
+                  ? "text-transparent bg-clip-text bg-gradient-to-r from-[#851D86] to-[#0048FE]"
+                  : "text-white hover:text-blue-400"
+              }`}
             >
               {item.name}
             </Link>
@@ -83,6 +109,15 @@ export default function Header() {
           </Link>
         </nav>
       </div>
+
+      {/* Referências para o Intersection Observer */}
+      <div ref={heroRef} id="hero" />
+      <div ref={sobreRef} id="sobre" />
+      <div ref={pilaresRef} id="pilares" />
+      <div ref={beneficiosRef} id="beneficios" />
+      <div ref={etapasRef} id="etapas" />
+      <div ref={depoimentosRef} id="depoimentos" />
+      <div ref={duvidasRef} id="duvidas" />
     </header>
   );
 }

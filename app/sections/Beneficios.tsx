@@ -1,8 +1,11 @@
 import Image from "next/image";
 
-export default function Beneficios() {
+interface HeroProps {
+  id: string;
+}
+export default function Beneficios({ id }: HeroProps) {
   return (
-    <section className="py-16 px-6 text-center" id="beneficios">
+    <section className="py-16 px-6 text-center" id={id}>
       {/* Título e descrição */}
       <div className="flex flex-col items-center w-full mb-6">
       <div className="flex items-center w-full justify-center">

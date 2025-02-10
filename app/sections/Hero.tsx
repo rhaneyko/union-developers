@@ -2,14 +2,18 @@
 
 import Image from "next/image";
 
-export default function Hero() {
+interface HeroProps {
+  id: string;
+}
+
+export default function Hero({ id }: HeroProps) {
   return (
     <section
       className="relative flex flex-col mt-[114px] md:flex-row items-center justify-center 
                  min-h-screen w-full text-center md:text-left px-6 md:px-[244px] 
                  bg-[url('/images/hero-mobile.jpg')] bg-cover bg-center bg-no-repeat 
                  md:bg-[url('/images/hero-desktop.jpg')]" 
-      id="hero"
+      id={id}
     >
       {/* 🔹 Texto */}
       <div className="relative z-10 max-w-3xl md:w-2/4">

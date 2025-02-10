@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 
+interface HeroProps {
+  id: string; // Adicione a prop id
+}
+
 const faqs = [
   { question: "O que é o Union?", answer: "O Union é um ambiente prático e imersivo que busca simular o mais próximo do que você vai encontrar nas empresas, desafiando seus membros a resolver problemas reais, com cronogramas e prazos de entrega. No Union, você desenvolve as skills mais procuradas pelo mercado, trabalha com ferramentas e metodologias utilizadas pelas empresas, além de ganhar experiência trabalhando com outras pessoas de diferentes partes do Brasil." },
   { question: "Quanto custa para fazer parte do Union?", answer: "Nada! O Union é 100% gratuito." },
@@ -15,7 +19,7 @@ const faqs = [
   { question: "Quanto tempo por dia preciso me dedicar nos projetos?", answer: "Você precisa ter disponibilidade de trabalhar no mínimo 1 hora por dia no projeto, além de participar das reuniões do time, que acontecem diariamente e aos finais de semana." },
 ];
 
-export default function Duvidas() {
+export default function Duvidas({ id }: HeroProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
@@ -23,7 +27,7 @@ export default function Duvidas() {
   };
 
   return (
-    <section className="py-16 px-6 flex flex-col items-center bg-[#1F1D2B]" id="duvidas">
+    <section className="py-16 px-6 flex flex-col items-center bg-[#1F1D2B]" id={id}>
       {/* 🔹 Título */}
       <div className="flex items-center w-full justify-center mb-6">
         <span className="hidden md:block absolute left-0 w-[32%] h-[3px] rounded-[20px] bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)]"></span>

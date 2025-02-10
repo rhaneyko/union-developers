@@ -1,6 +1,10 @@
-export default function Etapas() {
+interface HeroProps {
+    id: string; // Adicione a prop id
+  }
+
+export default function Etapas({ id }: HeroProps)  {
     return (
-        <section className="py-12 px-4 sm:px-6 flex flex-col justify-center items-center bg-[#1F1D2B]" id="etapas">
+        <section className="py-12 px-4 sm:px-6 flex flex-col justify-center items-center bg-[#1F1D2B]" id={id}>
 
             <div className="flex items-center w-full justify-center">
                 <span className="hidden sm:block absolute ml-[-920px] w-[32%] h-[3px] rounded-[20px] 

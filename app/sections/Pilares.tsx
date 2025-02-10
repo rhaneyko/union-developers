@@ -1,6 +1,12 @@
-export default function Pilares() {
+
+interface HeroProps {
+    id: string; // Adicione a prop id
+  }
+  
+
+export default function Pilares({ id }: HeroProps) {
     return (
-        <section className="flex justify-center text-center bg-[#1F1D2B] px-4 sm:px-0 py-8" id="pilares">
+        <section className="flex justify-center text-center bg-[#1F1D2B] px-4 sm:px-0 py-8" id={id}>
 
             {/* Container Principal */}
             <div className="w-full max-w-[1250px] md:max-w-[1400px] bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)] p-[2px] rounded-xl">
