@@ -15,7 +15,7 @@ interface HeroProps {
 export default function Depoimentos({ id }: HeroProps) {
   const testimonials = [
     { name: "Matheus Oliveira", image: "/images/pessoas/matheusOliveiraImage.png", feedback: "Antes de participar do Union, eu não tinha a mínima ideia de como era trabalhar em equipe e foi muito importante ter essa experiência. Durante a participação, consegui desenvolver soft skills importantes para o mercado de trabalho, como organização, atenção e trabalho em equipe.", linkedin: "/images/icons/linkedinIcon.svg", github: "/images/icons/githubIcon.svg" },
-    { name: "Luiz Meraki", image: "/images/pessoas/luizMerakiImage.png", feedback: "No Union você consegue ter muita evolução em pouco tempo, desenvolvendo tanto sua parte técnica como as habilidades interpessoais. No momento que você entra no Union, você mergulha a fundo nas tecnologias e vai aprendendo e aprimorando durante o dia a dia.", linkedin: "/images/icons/inkedinIcon.svg", github: "/images/icons/githubIcon.svg" },
+    { name: "Luiz Meraki", image: "/images/pessoas/luizMerakiImage.png", feedback: "No Union você consegue ter muita evolução em pouco tempo, desenvolvendo tanto sua parte técnica como as habilidades interpessoais. No momento que você entra no Union, você mergulha a fundo nas tecnologias e vai aprendendo e aprimorando durante o dia a dia.", linkedin: "/images/icons/linkedinIcon.svg", github: "/images/icons/githubIcon.svg" },
     { name: "José Ronaldo", image: "/images/pessoas/joseRonaldoImage.png", feedback: "O principal benefício do Union é ter uma pessoa mais experiente junto, que vai te direcionando. No Union, você encontra um ambiente muito profissional, onde é cobrado que você tenha padrão de commit, testes e uma alta qualidade de escrita de código, aumentando muita sua qualidade técnica.", linkedin: "/images/icons/linkedinIcon.svg", github: "/images/icons/githubIcon.svg" },
     { name: "Petrus Borges", image: "/images/pessoas/petrusBorgesImage.jpg", feedback: "No Union eu consegui desenvolver minhas hard skills, aprendendo novas tecnologias e melhorando a escrita do meu código. Eu percebi o quanto a parte de soft skills é importante para o mercado de tecnologia, como ter inteligência emocional, comunicação efetiva e resolução de problemas.", linkedin: "/images/icons/linkedinIcon.svg", github: "/images/icons/githubIcon.svg" },
     { name: "Salomão Leal", image: "/images/pessoas/salomaoLealImage.jpg", feedback: "Eu estava preso em cursos e não sabia como que era o fluxo de trabalho de uma empresa, com o Union eu consegui aprender isso e hoje me sinto muito mais preparado para o mercado. Durante a experiência no Union, eu aprendi a como pesquisar e se virar para resolver minhas task.", linkedin: "/images/icons/linkedinIcon.svg", github: "/images/icons/githubIcon.svg" },
@@ -71,13 +71,14 @@ export default function Depoimentos({ id }: HeroProps) {
                   </div>
                   <h3 className="text-[20px] md:text-[24px] font-bold text-center mt-4">{testimonial.name}</h3>
                   <p className="text-[16px] md:text-[18px] text-gray-300 text-center mt-2">{testimonial.feedback}</p>
-                  <div className="flex justify-center space-x-4 mt-4 text-gray-400">
+                  <div className="flex justify-center items-center space-x-4 mt-4 text-gray-400">
                     <a href={testimonial.linkedin}>
                       <Image src={testimonial.linkedin} alt="LinkedIn" width={24} height={24} />
                       <p className="text-xs">LinkedIn</p>
                     </a>
+                    
                     <a href={testimonial.github}>
-                      <Image src={testimonial.github} alt="Github" width={24} height={24} />
+                      <Image src={testimonial.github} alt="Github" width={24} height={24}  className="left-[12px]"/>
                       <p className="text-xs">Github</p>
                     </a>
                   </div>
