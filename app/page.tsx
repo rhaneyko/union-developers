@@ -6,6 +6,7 @@ import Duvidas from "./sections/Duvidas";
 import Etapas from "./sections/Etapas";
 import Hero from "./sections/Hero";
 import Inscricao from "./sections/Inscricao";
+import InscricaoCard from "./sections/InscricaoCard";
 import Pilares from "./sections/Pilares";
 import Sobre from "./sections/Sobre";
 
@@ -18,6 +19,7 @@ export default function Home() {
       <Pilares id="pilares" />
       <Beneficios id="beneficios" />
       <Etapas id="etapas" />
+      <InscricaoCard/>
       <Depoimentos id="depoimentos" />
       <Inscricao id="inscricao" />
       <Duvidas id="duvidas" />
