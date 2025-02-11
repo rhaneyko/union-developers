@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 interface HeroProps {
-  id: string; // Adicione a prop id
+  id: string; 
 }
 
 export default function Depoimentos({ id }: HeroProps) {
