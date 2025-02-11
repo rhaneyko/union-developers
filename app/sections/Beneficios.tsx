@@ -64,7 +64,7 @@ export default function Beneficios({ id }: HeroProps) {
           {
             title: "Mentoria",
             text: "Os mentores experientes oferecem orientação valiosa, proporcionando uma trajetória de aprendizado mais suave e eficiente.",
-            image: "/images/mentoriaImage.svg",
+            image: "/images/mentoriaImage.svg"
           },
         ].map((benefit, index) => (
           <div
