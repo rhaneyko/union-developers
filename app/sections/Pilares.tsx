@@ -1,6 +1,6 @@
 
 interface HeroProps {
-    id: string; // Adicione a prop id
+    id: string; 
   }
   
 

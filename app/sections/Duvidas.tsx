@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 
 interface HeroProps {
-  id: string; // Adicione a prop id
+  id: string; 
 }
 
 const faqs = [
