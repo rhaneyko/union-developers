@@ -66,16 +66,18 @@ export default function Inscricao({ id }: HeroProps) {
     watch,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: JSON.parse(localStorage.getItem("formData") || "{}"),
+    defaultValues: typeof window !== "undefined" ? JSON.parse(localStorage.getItem("formData") || "{}") : {},
     mode: "onChange",
   });
-
+  
   // Salvar dados no localStorage a cada mudança
   useEffect(() => {
-    const subscription = watch((value) => {
-      localStorage.setItem("formData", JSON.stringify(value));
-    });
-    return () => subscription.unsubscribe();
+    if (typeof window !== "undefined") {
+      const subscription = watch((value) => {
+        localStorage.setItem("formData", JSON.stringify(value));
+      });
+      return () => subscription.unsubscribe();
+    }
   }, [watch]);
 
   const nextStep = async () => {
