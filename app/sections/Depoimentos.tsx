@@ -39,7 +39,7 @@ export default function Depoimentos({ id }: HeroProps) {
         Veja o que quem já passou por essa experiência fala
       </p>
 
-      {/* 🔹 Carousel */}
+      {/* Carousel */}
       <div className="relative w-full max-w-[1200px]">
         <Swiper
           modules={[Navigation]}
@@ -88,7 +88,7 @@ export default function Depoimentos({ id }: HeroProps) {
           ))}
         </Swiper>
 
-        {/* 🔹 Botões de Navegação */}
+        {/* Botões de Navegação */}
         <button className="swiper-button-prev absolute left-[-40px] top-1/2 transform -translate-y-1/2 z-10 text-purple-400 hover:text-white">
           <ChevronLeft size={32} />
         </button>

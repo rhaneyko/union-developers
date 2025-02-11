@@ -1,4 +1,4 @@
-"use client"; // Certifique-se de que este componente é renderizado no lado do cliente
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -40,21 +40,21 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 h-[114px] bg-[rgb(18,17,25)] shadow-lg flex items-center">
-      <div className="container mx-auto flex items-center px-32 w-full">
+    <header className="fixed top-0 left-0 w-full z-50 h-[80px] lg:h-[114px] bg-[rgb(18,17,25)] shadow-lg flex items-center px-4 md:px-16 lg:px-32">
+      <div className="container mx-auto flex items-center justify-between w-full">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <Image src="/images/logoUnionDeveloper.svg" alt="Union Developers" width={263} height={35} />
+          <Image src="/images/logoUnionDeveloper.svg" alt="Union Developers" width={180} height={24} className="w-[150px] lg:w-[263px] lg:h-[35px]" />
         </Link>
 
-        {/* Menu Desktop - Centralizado */}
-        <nav className="hidden md:flex items-center flex-1 justify-center space-x-4">
+        {/* Menu Desktop  */}
+        <nav className="hidden lg:flex items-center flex-1 justify-center space-x-2 lg:space-x-6">
           {menuItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className={`relative text-xl font-bold font-poppins transition-all ${
-                activeLink === item.href.slice(1) // Remove o '#' do href
+              className={`relative text-sm lg:text-lg xl:text-xl font-bold font-poppins transition-all ${
+                activeLink === item.href.slice(1)
                   ? "text-transparent bg-clip-text bg-gradient-to-r from-[#851D86] to-[#0048FE]"
                   : "text-white hover:text-blue-400"
               }`}
@@ -64,10 +64,10 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Botão Gradiente - Alinhado à Direita */}
+        {/* Botão Gradiente */}
         <Link
           href="#inscricao"
-          className="hidden md:flex items-center justify-center w-[299px] h-[59px] tracking-[1.5px] text-lg font-poppins font-bold text-white rounded-lg shadow-md 
+          className="hidden lg:flex items-center justify-center w-[150px] md:w-[200px] xl:w-[299px] h-[40px] md:h-[50px] xl:h-[59px] tracking-[1.5px] text-xs md:text-sm xl:text-lg font-poppins font-bold text-white rounded-lg shadow-md 
                      bg-gradient-to-r from-[#851D86] to-[#0048FE] 
                      hover:from-[#6B1570] hover:to-[#003BBC] 
                      transition-all"
@@ -75,24 +75,24 @@ export default function Header() {
           Junte-se a nós
         </Link>
 
-        {/* Botão Hamburguer para Mobile */}
-        <button className="md:hidden text-white flex items-center ml-auto" onClick={() => setIsOpen(!isOpen)}>
+        {/* Botão Hamburguer  */}
+        <button className="lg:hidden text-white flex items-center" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
-      {/* Menu Mobile */}
+      {/* Menu Mobile  */}
       <div
-        className={`absolute top-[114px] left-0 w-full bg-[rgb(18,17,25)] transition-all ${
+        className={`absolute top-[80px] left-0 w-full bg-[rgb(18,17,25)] transition-all ${
           isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-        } overflow-hidden md:hidden`}
+        } overflow-hidden lg:hidden`}
       >
         <nav className="flex flex-col items-center space-y-4 py-6">
           {menuItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="text-white text-2xl font-semibold hover:text-blue-400 transition"
+              className="text-white text-lg font-semibold hover:text-blue-400 transition"
               onClick={() => setIsOpen(false)}
             >
               {item.name}
@@ -100,7 +100,7 @@ export default function Header() {
           ))}
           <Link
             href="#inscricao"
-            className="px-6 py-3 text-xl font-bold text-white rounded-lg shadow-md 
+            className="px-6 py-3 text-lg font-bold text-white rounded-lg shadow-md 
                        bg-gradient-to-r from-[#851D86] to-[#0048FE] 
                        hover:from-[#6B1570] hover:to-[#003BBC] 
                        transition-all"

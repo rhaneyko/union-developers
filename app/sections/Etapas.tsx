@@ -21,7 +21,7 @@ export default function Etapas({ id }: HeroProps)  {
                 {/* Container das Etapas */}
                 <ul className="relative w-full max-w-[800px] space-y-6 sm:space-y-12">
 
-                    {/* 🔹 Etapa 1 */}
+                    {/* Etapa 1 */}
                     <li className="relative flex flex-col sm:flex-row sm:left-[-140px] sm:top-5">
                         <div className="flex items-center relative w-full sm:w-[441px] bg-[rgb(18,17,25)] text-white rounded-[10px]
                                         before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-[2px] 
@@ -40,7 +40,7 @@ export default function Etapas({ id }: HeroProps)  {
                 bg-gradient-to-r from-[rgb(0,72,254)] to-[rgb(133,29,134)]"></span>
                     </li>
 
-                    {/* 🔹 Etapa 2 */}
+                    {/* Etapa 2 */}
                     <li className="relative flex flex-col sm:flex-row sm:items-center sm:justify-end sm:left-[140px] sm:top-5">
                         <div className="flex items-center relative w-full sm:w-[441px] bg-[rgb(18,17,25)] text-white rounded-[10px]
                                         before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-[2px] 
@@ -56,7 +56,7 @@ export default function Etapas({ id }: HeroProps)  {
                         <span className="hidden sm:block absolute left-[70px] mt-[-228px] ml-[190px] w-[100px] h-[2px] bg-gradient-to-r from-[rgb(0,72,254)] to-[rgb(133,29,134)]"></span>
                     </li>
 
-                    {/* 🔹 Etapa 3 */}
+                    {/* Etapa 3 */}
                     <li className="relative flex flex-col sm:flex-row sm:left-[-140px] sm:top-5">
                         <div className="flex items-center relative w-full sm:w-[441px] bg-[rgb(18,17,25)] text-white rounded-[10px]
                                         before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-[2px] 
@@ -73,7 +73,7 @@ export default function Etapas({ id }: HeroProps)  {
                                          bg-gradient-to-r from-[rgb(0,72,254)] to-[rgb(133,29,134)]"></span>
                     </li>
 
-                    {/* 🔹 Etapa 4 */}
+                    {/* Etapa 4 */}
                     <li className="relative flex flex-col sm:flex-row sm:items-center sm:justify-end sm:left-[140px] sm:top-1">
                         <div className="flex items-center relative w-full sm:w-[441px] sm:top-4 bg-[rgb(18,17,25)] text-white rounded-[10px]
                                         before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-[2px] 

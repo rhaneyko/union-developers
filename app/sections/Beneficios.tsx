@@ -5,23 +5,22 @@ interface HeroProps {
 }
 export default function Beneficios({ id }: HeroProps) {
   return (
-    <section className="py-16 px-6 text-center" id={id}>
+    <section className="py-16 px-4 sm:px-6 md:px-8 text-center w-full" id={id}>
       {/* Título e descrição */}
       <div className="flex flex-col items-center w-full mb-6">
-      <div className="flex items-center w-full justify-center">
-          <span className="absolute ml-[-920px] block w-[32%] h-[3px] rounded-[20px] 
-                 bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)]"></span>
-          <h2 className="text-[40px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)] mx-4">
+        <div className="flex items-center w-full justify-center relative">
+          <span className="hidden sm:block absolute left-0 w-[20%] h-[3px] rounded-[20px] bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)]"></span>
+          <h2 className="text-2xl sm:text-[32px] md:text-[40px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)] mx-4">
             Benefícios
           </h2>
-          <span className="absolute ml-[920px] block w-[32%] h-[3px] rounded-[20px] 
-                 bg-gradient-to-bl from-[rgb(133,29,134)] to-[rgb(0,72,254)]"></span>
+          <span className="hidden sm:block absolute right-0 w-[20%] h-[3px] rounded-[20px] bg-gradient-to-bl from-[rgb(133,29,134)] to-[rgb(0,72,254)]"></span>
         </div>
 
-        <p className="text-[18px] md:text-[24px] text-gray-300 max-w-[750px] mx-auto mt-6 md:mt-10 mb-6 md:mb-10">
+        <p className="text-[16px] sm:text-[18px] md:text-[24px] text-gray-300 max-w-[750px] mx-auto mt-6 md:mt-10 mb-6 md:mb-10">
           Conheça os benefícios incríveis que o Union proporciona para seus membros!
         </p>
       </div>
+
 
       {/* Lista de Benefícios */}
       <div className="flex flex-col items-center gap-6 max-w-6xl mx-auto">
@@ -72,7 +71,7 @@ export default function Beneficios({ id }: HeroProps) {
             key={index}
             className={`flex flex-col md:flex-row items-center text-white w-full max-w-[1129px] p-6 md:p-12 ${index % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
           >
-            <Image src={benefit.image} width={160} height={160} alt={benefit.title} />
+            <Image src={benefit.image} width={120} height={120} alt={benefit.title} className="w-[100px] sm:w-[120px] md:w-[160px] h-auto" />
             <div className="mt-4 md:mt-0 md:ml-8 text-center md:text-left w-full md:w-[674px]">
               <h3 className="text-[24px] md:text-[32px] font-bold">{benefit.title}</h3>
               <p className="text-[18px] md:text-[24px] text-gray-300 mt-2">{benefit.text}</p>

@@ -177,7 +177,7 @@ export default function Inscricao({ id }: HeroProps) {
                       </p>
                     </div>
 
-                    {/* 🔹 Barra de Progresso */}
+                    {/* Barra de Progresso */}
                     <div className="flex justify-between items-center mt-12 mb-8 w-[1042px] px-8">
                       {["Dados pessoais", "Informações técnicas", "Sobre você", "Enviar"].map((title, index) => (
                         <div key={index} className="flex flex-col w-[150px]  items-center">
@@ -323,7 +323,7 @@ export default function Inscricao({ id }: HeroProps) {
                     </div>
                   </div>
 
-                  {/* 🔹 Barra de Progresso */}
+                  {/* Barra de Progresso */}
                   <div className="flex justify-between items-center mt-12 mb-8 w-[1042px] px-8">
                     {["Dados pessoais", "Informações técnicas", "Sobre você", "Enviar"].map((title, index) => (
                       <div key={index} className="flex flex-col w-[150px]  items-center">
@@ -428,7 +428,7 @@ export default function Inscricao({ id }: HeroProps) {
                     </div>
                   </div>
 
-                  {/* 🔹 Barra de Progresso */}
+                  {/* Barra de Progresso */}
                   <div className="flex justify-between items-center mt-12 mb-8 w-[1042px] px-8">
                     {["Dados pessoais", "Informações técnicas", "Sobre você", "Enviar"].map((title, index) => (
                       <div key={index} className="flex flex-col w-[150px]  items-center">
@@ -629,7 +629,7 @@ export default function Inscricao({ id }: HeroProps) {
                     </div>
                   </div>
 
-                  {/* 🔹 Barra de Progresso */}
+                  {/* Barra de Progresso */}
                   <div className="flex justify-between items-center mt-12 mb-8 w-[1042px] px-8">
                     {["Dados pessoais", "Informações técnicas", "Sobre você", "Enviar"].map((title, index) => (
                       <div key={index} className="flex flex-col w-[150px]  items-center">

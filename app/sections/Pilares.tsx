@@ -24,10 +24,10 @@ export default function Pilares({ id }: HeroProps) {
                         Os pilares que sustentam o formato inovador de aprendizagem do Union é a junção de incríveis metodologias!
                     </p>
 
-                    {/* Grid de Cards - Mobile First */}
+                    {/* Grid de Cards */}
                     <div className="flex flex-col sm:flex-row sm:gap-8 rounded-xl w-full sm:w-[1450px] max-w-[1450px] sm:mb-[-50px] sm:px-[100px] bg-[#1F1D2B] ">
 
-                        {/* Card 1 - Ativa */}
+                        {/* Card 1 */}
                         <div className="bg-[#141221] w-full sm:w-[396px] min-w-[250px] sm:min-w-[337px] text-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 group mb-6 sm:mb-0">
                             <div className="p-[30px] sm:p-[50px] text-lg sm:text-xl font-bold text-white bg-gradient-to-r from-[#851D86] to-[#0048FE]
                             transition-all duration-300 group-hover:bg-white group-hover:text-black">
@@ -41,7 +41,7 @@ export default function Pilares({ id }: HeroProps) {
                             </div>
                         </div>
 
-                        {/* Card 2 - Andragogia */}
+                        {/* Card 2 */}
                         <div className="bg-[#141221] w-full sm:w-[396px] min-w-[250px] sm:min-w-[337px] text-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 group mb-6 sm:mb-0">
                             <div className="p-[30px] sm:p-[50px] text-lg sm:text-xl font-bold text-white bg-gradient-to-r from-[#851D86] to-[#0048FE]
                             transition-all duration-300 group-hover:bg-white group-hover:text-black">
@@ -55,7 +55,7 @@ export default function Pilares({ id }: HeroProps) {
                             </div>
                         </div>
 
-                        {/* Card 3 - Ágil */}
+                        {/* Card 3 */}
                         <div className="bg-[#141221] w-full sm:w-[396px] min-w-[250px] sm:min-w-[337px] text-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 group">
                             <div className="p-[30px] sm:p-[50px] text-lg sm:text-xl font-bold text-white bg-gradient-to-r from-[#851D86] to-[#0048FE]
                             transition-all duration-300 group-hover:bg-white group-hover:text-black">

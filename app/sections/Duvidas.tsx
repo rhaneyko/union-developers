@@ -28,7 +28,7 @@ export default function Duvidas({ id }: HeroProps) {
 
   return (
     <section className="py-16 px-6 flex flex-col items-center bg-[#1F1D2B]" id={id}>
-      {/* 🔹 Título */}
+      {/* Título */}
       <div className="flex items-center w-full justify-center mb-6">
         <span className="hidden md:block absolute left-0 w-[32%] h-[3px] rounded-[20px] bg-gradient-to-bl from-[rgb(0,72,254)] to-[rgb(133,29,134)]"></span>
         <h2 className="text-[32px] md:text-[40px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-[rgb(133,29,134)] to-[rgb(0,72,254)] mx-4">
@@ -41,7 +41,7 @@ export default function Duvidas({ id }: HeroProps) {
         Confira as perguntas mais frequentes sobre o Union
       </p>
 
-      {/* 🔹 Lista de Perguntas e Respostas */}
+      {/* Lista de Perguntas e Respostas */}
       <div className="w-full max-w-[1000px] space-y-4">
         {faqs.map((faq, index) => (
           <div key={index} className="w-full">

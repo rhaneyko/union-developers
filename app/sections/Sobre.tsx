@@ -23,7 +23,7 @@ export default function Sobre({ id }: HeroProps) {
             </h2>
           </div>
 
-          {/* Parágrafos responsivos */}
+          {/* Parágrafos */}
           <div className="space-y-4 px-4 sm:px-10 max-w-full sm:max-w-[900px] text-[16px] sm:text-[24px] leading-relaxed">
             <p>
               O Union é uma oportunidade única para desenvolvedores juniores, nossa missão é proporcionar a
